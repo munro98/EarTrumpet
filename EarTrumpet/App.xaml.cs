@@ -14,6 +14,8 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 
+using EarTrumpet.MidiControls;
+
 namespace EarTrumpet
 {
     public partial class App
@@ -32,6 +34,7 @@ namespace EarTrumpet
         private WindowHolder _settingsWindow;
         private ErrorReporter _errorReporter;
         private AppSettings _settings;
+        private MidiControl _midiControl;
 
         private void OnAppStartup(object sender, StartupEventArgs e)
         {
@@ -40,6 +43,7 @@ namespace EarTrumpet
             PackageVersion = PackageHelper.GetVersion(HasIdentity);
             _settings = new AppSettings();
             _errorReporter = new ErrorReporter(_settings);
+            
 
             if (SingleInstanceAppMutex.TakeExclusivity())
             {
@@ -78,6 +82,10 @@ namespace EarTrumpet
             // Initialize the FlyoutWindow last because its Show/Hide cycle will pump messages, causing UI frames
             // to be executed, breaking the assumption that startup is complete.
             _flyoutWindow.Initialize();
+
+            _midiControl = new MidiControl(_collectionViewModel);
+
+
         }
 
         private void CompleteStartup()
