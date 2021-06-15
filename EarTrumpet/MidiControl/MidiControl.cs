@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Midi;
 using System.Diagnostics;
-
 using EarTrumpet.UI.ViewModels;
-
 using System.Windows.Threading;
-
 namespace EarTrumpet.MidiControls
+
 
 {
     class MidiControl
@@ -20,6 +18,20 @@ namespace EarTrumpet.MidiControls
 
         MidiDeviceWatcher midiInDeviceWatcher;
         private List<MidiInPort> midiInPorts;
+
+        private HashSet<string> browserApps = new HashSet<string>()
+                    {
+                        "Google Chrome",
+                        "Mozilla FireFox",
+                        "Microsoft Edge",
+                    };
+
+        private HashSet<string> musicApps = new HashSet<string>()
+                    {
+                        "Spotify",
+                        "AIMP",
+                        "VLC media player",
+                    };
 
 
         public MidiControl(DeviceCollectionViewModel mainViewModel)
@@ -68,28 +80,51 @@ namespace EarTrumpet.MidiControls
             if (onMsg.Note == 60 && _mainViewModel.Default != null)
             {
                 _mainViewModel.Default.Volume = vol;
+
             }
+            //return;
+            if (onMsg.Note == 61 && _mainViewModel.Default != null)
+            {
+                foreach (DeviceViewModel dev in _mainViewModel.AllDevices)
+                {
+                    if (browserApps.Contains(dev.DisplayName))
+                    {
+                        //dev.Volume = vol;
+                    }
+                }
 
-
-            if (onMsg.Note == 64)
+            }
+            if (onMsg.Note == 62 && _mainViewModel.Default != null)
+            {
+                
+            }
+            if (onMsg.Note == 63 && _mainViewModel.Default != null)
             {
                 
             }
 
-            if (onMsg.Note == 65)
+
+            if (onMsg.Note == 64) // play/pause
+            {
+                
+            }
+
+            if (onMsg.Note == 65) // prev
             {
 
             }
 
-            if (onMsg.Note == 66)
+            if (onMsg.Note == 66) // next
             {
 
             }
 
-            if (onMsg.Note == 67)
+            if (onMsg.Note == 67) // assign application
             {
 
             }
+
+
 
         }
 
@@ -196,20 +231,6 @@ namespace EarTrumpet.MidiControls
                     //this.rootPage.NotifyUser("Message received successfully!", NotifyType.StatusMessage);
                 }
             }));
-
-            /*
-            // Use the Dispatcher to update the messages on the UI thread
-            await Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
-            {
-                // Skip TimingClock and ActiveSensing messages to avoid overcrowding the list. Commment this check out to see all messages
-                if ((receivedMidiMessage.Type != MidiMessageType.TimingClock) && (receivedMidiMessage.Type != MidiMessageType.ActiveSensing))
-                {
-                    //this.inputDeviceMessages.Items.Add(outputMessage + "\n");
-                    //this.inputDeviceMessages.ScrollIntoView(this.inputDeviceMessages.Items[this.inputDeviceMessages.Items.Count - 1]);
-                    //this.rootPage.NotifyUser("Message received successfully!", NotifyType.StatusMessage);
-                }
-            });
-            */
 
         }
 

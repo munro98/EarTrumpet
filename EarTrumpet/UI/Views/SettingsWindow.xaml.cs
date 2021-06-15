@@ -19,6 +19,8 @@ namespace EarTrumpet.UI.Views
             StateChanged += OnWindowStateChanged;
         }
 
+        public static object Apps { get; internal set; }
+
         private void OnWindowStateChanged(object sender, EventArgs e)
         {
             var chrome = System.Windows.Shell.WindowChrome.GetWindowChrome(this);

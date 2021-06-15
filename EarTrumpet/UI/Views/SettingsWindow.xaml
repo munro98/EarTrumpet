@@ -116,6 +116,16 @@
                           IsChecked="{Binding UseLegacyIcon, Mode=TwoWay}" />
             </StackPanel>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:EarTrumpetVolumeGroupSettingsPageViewModel}">
+            <StackPanel Orientation="Vertical">
+                <CheckBox HorizontalAlignment="Left"
+                          Content="{x:Static resx:Resources.SettingsUseLegacyEarTrumpetIcon}"
+                          IsChecked="{Binding UseLegacyIcon, Mode=TwoWay}" />
+                <ListView x:Name="Apps" SelectionMode="Single">
+              
+                </ListView>
+            </StackPanel>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:EarTrumpetAboutPageViewModel}">
             <StackPanel>
                 <StackPanel Margin="12,24" Orientation="Horizontal">
