@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Midi;
+using System.Diagnostics;
 
 using EarTrumpet.UI.ViewModels;
 
@@ -29,19 +30,71 @@ namespace EarTrumpet.MidiControls
             this.midiInPorts = new List<MidiInPort>();
 
             // Set up the MIDI input device watcher
-            this.midiInDeviceWatcher = new MidiDeviceWatcher(MidiInPort.GetDeviceSelector());
+            this.midiInDeviceWatcher = new MidiDeviceWatcher(MidiInPort.GetDeviceSelector(), this);
 
             // Start watching for devices
             this.midiInDeviceWatcher.Start();
+
+
+
+
         }
 
-        private void noteOn(IMidiMessage receivedMidiMessage)
+        public async void selectMidiDevice(DeviceInformation devInfo)
+        {
+            var currentMidiInputDevice = await MidiInPort.FromIdAsync(devInfo.Id);
+            if (currentMidiInputDevice == null)
+            {
+                //this.rootPage.NotifyUser("Unable to create MidiInPort from input device", NotifyType.ErrorMessage);
+                return;
+            }
+
+            // We have successfully created a MidiInPort; add the device to the list of active devices, and set up message receiving
+            if (!this.midiInPorts.Contains(currentMidiInputDevice))
+            {
+                this.midiInPorts.Add(currentMidiInputDevice);
+                currentMidiInputDevice.MessageReceived += MidiInputDevice_MessageReceived;
+            }
+
+        }
+
+        private void noteOn(IMidiMessage msg)
         {
 
+            var onMsg = (MidiNoteOnMessage)msg;
+            int vol = (int)((float)onMsg.Velocity * 100.0f / 127.0);
+            Trace.WriteLine($"MidiControl noteOn {onMsg.Velocity}");
+
+            if (onMsg.Note == 60 && _mainViewModel.Default != null)
+            {
+                _mainViewModel.Default.Volume = vol;
+            }
+
+
+            if (onMsg.Note == 64)
+            {
+                
+            }
+
+            if (onMsg.Note == 65)
+            {
+
+            }
+
+            if (onMsg.Note == 66)
+            {
+
+            }
+
+            if (onMsg.Note == 67)
+            {
+
+            }
+
         }
 
 
-        private void noteOff(IMidiMessage receivedMidiMessage)
+        private void noteOff(IMidiMessage msg)
         {
 
         }
@@ -61,10 +114,16 @@ namespace EarTrumpet.MidiControls
                 case MidiMessageType.NoteOff:
                     var noteOffMessage = (MidiNoteOffMessage)receivedMidiMessage;
                     outputMessage.Append(", Channel: ").Append(noteOffMessage.Channel).Append(", Note: ").Append(noteOffMessage.Note).Append(", Velocity: ").Append(noteOffMessage.Velocity);
+
+                    noteOff(receivedMidiMessage);
+
                     break;
                 case MidiMessageType.NoteOn:
                     var noteOnMessage = (MidiNoteOnMessage)receivedMidiMessage;
                     outputMessage.Append(", Channel: ").Append(noteOnMessage.Channel).Append(", Note: ").Append(noteOnMessage.Note).Append(", Velocity: ").Append(noteOnMessage.Velocity);
+
+                    noteOn(receivedMidiMessage);
+
                     break;
                 case MidiMessageType.PolyphonicKeyPressure:
                     var polyphonicKeyPressureMessage = (MidiPolyphonicKeyPressureMessage)receivedMidiMessage;

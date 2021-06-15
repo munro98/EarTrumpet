@@ -11,12 +11,7 @@ using Windows.UI.Xaml.Controls;
 using System.Windows.Threading;
 //using Microsoft.CompilerServices.AsyncTargetingPack;
 
-namespace Windows.Devices.Enumeration
-{
-
-}
-
-    namespace EarTrumpet.MidiControls
+namespace EarTrumpet.MidiControls
 {
     /// <summary>
     /// DeviceWatcher class to monitor adding/removing MIDI devices on the fly
@@ -30,14 +25,17 @@ namespace Windows.Devices.Enumeration
         string midiSelector = string.Empty;
         Dispatcher coreDispatcher = Dispatcher.CurrentDispatcher;
 
+        MidiControl midiControl;
+
         /// <summary>
         /// Constructor: Initialize and hook up Device Watcher events
         /// </summary>
         /// <param name="midiSelectorString">MIDI Device Selector</param>
         /// <param name="dispatcher">CoreDispatcher instance, to update UI thread</param>
         /// <param name="portListBox">The UI element to update with list of devices</param>
-        internal MidiDeviceWatcher(string midiSelectorString)
+        internal MidiDeviceWatcher(string midiSelectorString, MidiControl midiControl)
         {
+            this.midiControl = midiControl;
             this.deviceWatcher = DeviceInformation.CreateWatcher(midiSelectorString);
             //this.portList = portListBox;
             this.midiSelector = midiSelectorString;
@@ -99,6 +97,10 @@ namespace Windows.Devices.Enumeration
             // Get a list of all MIDI devices
             this.deviceInformationCollection = await DeviceInformation.FindAllAsync(this.midiSelector); // https://stackoverflow.com/questions/44099401/frombluetoothaddressasync-iasyncoperation-does-not-contain-a-definition-for-get
 
+
+            int i = 0;
+
+
             // If no devices are found, update the ListBox
             if ((this.deviceInformationCollection == null) || (this.deviceInformationCollection.Count == 0))
             {
@@ -117,10 +119,23 @@ namespace Windows.Devices.Enumeration
                 foreach (var device in deviceInformationCollection)
                 {
                     //this.portList.Items.Add(device.Name);
+                    if (device.Name.IndexOf("Teensy MIDI") != -1)
+                    {
+
+                        //selectMidiDevice(device);
+                        i = 10;
+                        this.midiControl.selectMidiDevice(device);
+                    }
+                    
                 }
 
                 //this.portList.IsEnabled = true;
+
+                
+
             }
+
+            Console.Error.Write("" + i);
         }
 
         /// <summary>
