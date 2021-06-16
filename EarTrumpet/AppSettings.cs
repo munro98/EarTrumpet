@@ -192,5 +192,10 @@ namespace EarTrumpet
             var region = new Windows.Globalization.GeographicRegion();
             return !europeanUnionRegions.Contains(region.CodeTwoLetter);
         }
+
+
+
+
+
     }
 }

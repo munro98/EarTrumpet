@@ -85,9 +85,9 @@ namespace EarTrumpet.MidiControls
             //return;
             if (onMsg.Note == 61 && _mainViewModel.Default != null)
             {
-                foreach (DeviceViewModel dev in _mainViewModel.AllDevices)
+                foreach (var app in _mainViewModel.Default.Apps)
                 {
-                    if (browserApps.Contains(dev.DisplayName))
+                    if (browserApps.Contains(app.DisplayName))
                     {
                         //dev.Volume = vol;
                     }

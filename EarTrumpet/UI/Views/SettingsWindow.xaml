@@ -121,8 +121,8 @@
                 <CheckBox HorizontalAlignment="Left"
                           Content="{x:Static resx:Resources.SettingsUseLegacyEarTrumpetIcon}"
                           IsChecked="{Binding UseLegacyIcon, Mode=TwoWay}" />
-                <ListView x:Name="Apps" SelectionMode="Single">
-              
+                <ListView x:Name="Apps" SelectionMode="Single" ItemsSource="{Binding Apps, Mode=TwoWay}" SelectedItem="{Binding SelectedApps}">
+
                 </ListView>
             </StackPanel>
         </DataTemplate>

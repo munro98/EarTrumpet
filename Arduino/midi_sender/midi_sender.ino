@@ -41,11 +41,13 @@ int butt7;
 int butt8;
 int butt9;
 int butt10;
+int butt11;
 
 int butt7_prev;
 int butt8_prev;
 int butt9_prev;
 int butt10_prev;
+int butt11_prev;
 
 
 void loop() {
@@ -59,14 +61,17 @@ void loop() {
   butt8 = digitalRead(8);
   butt9 = digitalRead(9);
   butt10 = digitalRead(10);
+  butt11 = digitalRead(11);
 
   if (butt7 != butt7_prev) { // play/pause
     if (butt7) {
       usbMIDI.sendNoteOn(64, 255, channel);
+      Serial.println("digital 7 on");
     } 
-    //else {
-    //  usbMIDI.sendNoteOff(64, 0, channel);
-    //}
+    else {
+      //usbMIDI.sendNoteOff(64, 0, channel);
+      Serial.println("digital 7 off");
+    }
   }
 
   if (butt8 != butt8_prev) { // prev
@@ -96,10 +101,18 @@ void loop() {
     //}
   }
 
-  butt7 = butt7_prev;
-  butt8 = butt8_prev;
-  butt9 = butt9_prev;
-  butt10 = butt10_prev;
+  if (butt11 != butt11_prev) { // switch default audio device
+    if (butt11) {
+      butt11_prev = butt11;
+      usbMIDI.sendNoteOn(68, 255, channel);
+    } 
+  }
+
+  butt7_prev = butt7;
+  butt8_prev = butt8;
+  butt9_prev = butt9;
+  butt10_prev = butt10;
+  butt11_prev = butt11;
   
   
   knob0 = analogRead(0);
