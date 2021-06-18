@@ -25,6 +25,63 @@ namespace EarTrumpet.UI.ViewModels
         public ObservableCollection<String> Apps{ get; set; }
         = new ObservableCollection<String>();
 
+        /*
+        public ObservableCollection<String> Apps { get {
+           ObservableCollection<String> newApps = new ObservableCollection<String>();
+
+            foreach (var app : collectionViewModel.Default.Apps) {
+                if (!browser.contains(app) && !music.contains(app) && !game.contains(app))
+                    Apps.Add(app.DisplayName);
+            }
+
+            returns newApps;
+
+        } set{
+        
+        } }
+        = new ObservableCollection<String>();
+
+        // music
+        public ObservableCollection<String> musicApps { get {
+           ObservableCollection<String> newApps = new ObservableCollection<String>();
+
+            foreach (var app : collectionViewModel.Default.Apps) {
+                if (music.contains(app))
+                    Apps.Add(app.DisplayName);
+            }
+            returns newApps;
+        } set{
+        } }
+        = new ObservableCollection<String>();
+
+        //browser
+        public ObservableCollection<String> browserApps { get {
+           ObservableCollection<String> newApps = new ObservableCollection<String>();
+
+            foreach (var app : collectionViewModel.Default.Apps) {
+                if (browserc.contains(app))
+                    Apps.Add(app.DisplayName);
+            }
+            returns newApps;
+        } set{
+        } }
+        = new ObservableCollection<String>();
+
+        // Game
+        public ObservableCollection<String> MusicApps { get {
+           ObservableCollection<String> newApps = new ObservableCollection<String>();
+
+            foreach (var app : collectionViewModel.Default.Apps) {
+                if (game.contains(app))
+                    Apps.Add(app.DisplayName);
+            }
+            returns newApps;
+        } set{
+        } }
+        = new ObservableCollection<String>();
+
+        */
+
 
         public String _SelectedApps;
         public String SelectedApps { get { return _SelectedApps; } 

@@ -138,6 +138,7 @@
     <Compile Include="Extensions\FrameworkElementExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Features.cs" />
+    <Compile Include="SendInput\InputSender.cs" />
     <Compile Include="Interop\Helpers\InputHelper.cs" />
     <Compile Include="Interop\Helpers\SettingsPageHelper.cs" />
     <Compile Include="Interop\Helpers\PackageHelper.cs" />

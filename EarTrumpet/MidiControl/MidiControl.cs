@@ -8,7 +8,19 @@ using Windows.Devices.Midi;
 using System.Diagnostics;
 using EarTrumpet.UI.ViewModels;
 using System.Windows.Threading;
+using EarTrumpet.SendInput;
+
 namespace EarTrumpet.MidiControls
+
+/*
+ TODO
+
+    implement play/pause prev next buttons using virtual key input
+    
+    finish creating volume groups in settings panel
+    persist the settings in volume groups
+
+ */
 
 
 {
@@ -33,6 +45,12 @@ namespace EarTrumpet.MidiControls
                         "VLC media player",
                     };
 
+        private HashSet<string> gameApps = new HashSet<string>()
+                    {
+                        "Counter Strike",
+                        "",
+                    };
+
 
         public MidiControl(DeviceCollectionViewModel mainViewModel)
         {
@@ -46,9 +64,6 @@ namespace EarTrumpet.MidiControls
 
             // Start watching for devices
             this.midiInDeviceWatcher.Start();
-
-
-
 
         }
 
@@ -77,53 +92,86 @@ namespace EarTrumpet.MidiControls
             int vol = (int)((float)onMsg.Velocity * 100.0f / 127.0);
             Trace.WriteLine($"MidiControl noteOn {onMsg.Velocity}");
 
-            if (onMsg.Note == 60 && _mainViewModel.Default != null)
+            if (onMsg.Note == 60 && _mainViewModel.Default != null) // master
             {
                 _mainViewModel.Default.Volume = vol;
 
             }
             //return;
-            if (onMsg.Note == 61 && _mainViewModel.Default != null)
+            if (onMsg.Note == 61 && _mainViewModel.Default != null) // music
+            {
+                foreach (var app in _mainViewModel.Default.Apps)
+                {
+                    if (musicApps.Contains(app.DisplayName))
+                    {
+                        app.Volume = vol;
+                    }
+                }
+
+            }
+            if (onMsg.Note == 62 && _mainViewModel.Default != null) // browser apps
             {
                 foreach (var app in _mainViewModel.Default.Apps)
                 {
                     if (browserApps.Contains(app.DisplayName))
                     {
-                        //dev.Volume = vol;
+                        app.Volume = vol;
                     }
                 }
-
             }
-            if (onMsg.Note == 62 && _mainViewModel.Default != null)
+            if (onMsg.Note == 63 && _mainViewModel.Default != null) // games
             {
-                
-            }
-            if (onMsg.Note == 63 && _mainViewModel.Default != null)
-            {
-                
+                foreach (var app in _mainViewModel.Default.Apps)
+                {
+                    if (gameApps.Contains(app.DisplayName))
+                    {
+                        app.Volume = vol;
+                    }
+                }
             }
 
 
             if (onMsg.Note == 64) // play/pause
             {
+
+                //VK_MEDIA_PLAY_PAUSE 0xB3
+                InputSender.SendKeyboardInput(new InputSender.KeyboardInput[]
+                {
+                    new InputSender.KeyboardInput
+                    {
+                        wScan = 0x0,
+                        wVk = 0xB3,
+                        dwFlags = (uint)(InputSender.KeyEventF.KeyDown),
+                    },
+                    new InputSender.KeyboardInput
+                    {
+                        wScan = 0x0,
+                        wVk = 0xB3,
+                        dwFlags = (uint)(InputSender.KeyEventF.KeyUp),
+                    }
+                });
                 
             }
 
             if (onMsg.Note == 65) // prev
             {
-
+                //VK_MEDIA_PREV_TRACK
+                //0xB1
+                
             }
 
             if (onMsg.Note == 66) // next
             {
+                //VK_MEDIA_NEXT_TRACK
+                //0xB0
 
             }
 
-            if (onMsg.Note == 67) // assign application
+            /*
+            if (onMsg.Note == 67) // assign application to volume group?
             {
-
             }
-
+            */
 
 
         }
